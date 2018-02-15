@@ -5,12 +5,13 @@ public class Account extends Client{
     private String login;
     private String password;
 
-    static HashMap<String, String> accounts = new HashMap<>();
+    public HashMap<String, String> accounts = new HashMap<>();
 
     Account(String name, String surname, String login, String password) {
         super(name, surname);
         this.login = login;
         this.password = password;
+        accounts.put(login, password);
     }
 
     public String getLogin() {

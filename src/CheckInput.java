@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 public class CheckInput {
     private BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-    public int stringToInt() throws IOException {
+    int stringToInt() throws IOException {
         int myInt;
         while (true) {
             String myString = bufferedReader.readLine();

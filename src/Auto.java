@@ -3,9 +3,9 @@ public class Auto {
     private String brand;
     private double engineCapacity;
 
-    public Auto() {}
+    Auto() {}
 
-    public Auto(String brand, double engineCapacity)
+    Auto(String brand, double engineCapacity)
     {
         this.brand = brand;
         this.engineCapacity = engineCapacity;

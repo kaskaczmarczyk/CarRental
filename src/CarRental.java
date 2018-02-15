@@ -8,8 +8,9 @@ public class CarRental {
 
     public static void main(String[] args) throws IOException {
         CarRental carRental = new CarRental();
+
         BufferedReader bufferedReader = carRental.bufferedReader;
-        SportAuto auto1 = new SportAuto("Peugeot", 1.4, true, true);
+        Auto auto1 = new Auto("Peugeot", 1.4);
         Auto auto2 = new Auto("Audi", 1.6);
         Auto auto3 = new Auto("Honda", 2.0);
         Auto auto4 = new Auto("Opel", 2.5);
@@ -19,6 +20,7 @@ public class CarRental {
         ManageAuto.allAuto.add(auto3);
         ManageAuto.allAuto.add(auto4);
         ManageAuto.allAuto.add(auto5);
+        Client.rentedCarsByClient.add(auto1);
 
 
         while (true) {
@@ -50,12 +52,12 @@ public class CarRental {
                     showAllCars.showAllCars();
                     break;
                 case "5":
-                    ManageAuto loginToAccount = new ManageAuto();
-                    loginToAccount.login();
+                    ManageAccounts manageLogin = new ManageAccounts();
+                    manageLogin.login();
                     break;
                 case "6":
-                    ManageAuto registerNewAccount = new ManageAuto();
-                    registerNewAccount.register();
+                    ManageAccounts manageRegister = new ManageAccounts();
+                    manageRegister.register();
                     break;
                 default:
                     System.out.println("...");

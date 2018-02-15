@@ -4,90 +4,12 @@ import java.util.ArrayList;
 
 public class ManageAuto extends CheckInput{
     static ArrayList<Auto> allAuto = new ArrayList<>();
-    private static ArrayList<Auto> rentedAuto = new ArrayList<>();
-    private static ArrayList<Auto> availableCars = allAuto;
-
-    private boolean loginOrRegister() throws IOException {
-        while (true) {
-            System.out.print("Do you have an account in our car rental? Y/N ");
-            String answer = notTakeEmptyString();
-            if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
-                login();
-                break;
-            } else if (answer.equalsIgnoreCase("n") || answer.equalsIgnoreCase("no")) {
-                System.out.println("You must create a new account. ");
-                register();
-                break;
-            } else {
-                System.out.println("Enter the correct character! ");
-            }
-        }
-        return true;
-    }
-
-    public void login() throws IOException {
-        boolean flag = true;
-        while (flag) {
-            if (!Database.DATABASE.accountsDB.isEmpty()) {
-                System.out.print("Enter yor login: ");
-                String login = notTakeEmptyString();
-                System.out.print("Enter your password: ");
-                String password = notTakeEmptyString();
-                for (Account account: Database.DATABASE.accountsDB) {
-                    if (account.getLogin().equals(login) && account.getPassword().equals(password)) {
-                        System.out.println("You login to your account. ");
-                        flag = false;
-                    } else {
-                        System.out.println("Such account doesn't exist! ");
-                    }
-                }
-            } else {
-                System.out.println("Database is empty! ! ");
-            }
-        }
-        checkAccount();
-    }
-
-    public void register() throws IOException {
-        boolean flag = true;
-        while (flag) {
-            System.out.print("Enter your name: ");
-            String name = notTakeEmptyString();
-            System.out.print("Enter your surname: ");
-            String surname = notTakeEmptyString();
-            Client client = new Client(name, surname);
-            System.out.print("Enter your login: ");
-            String login = notTakeEmptyString();
-            System.out.print("Enter your password: ");
-            String password = notTakeEmptyString();
-            Account newAccount = new Account(client.getName(), client.getSurname(), login, password);
-            if (!Database.DATABASE.accountsDB.contains(newAccount)) {
-                Database.DATABASE.accountsDB.add(newAccount);
-                System.out.println("You created a new account. ");
-                flag = false;
-            } else {
-                System.out.println("Such account has already exist! ");
-            }
-        }
-    }
-
-    private void checkAccount() throws IOException {
-        while (true) {
-            System.out.print("Do you want to check your account? Y/N ");
-            String answer = notTakeEmptyString();
-            if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
-                Client.showAllRentedCarsByClient();
-                break;
-            } else if (answer.equalsIgnoreCase("n") || answer.equalsIgnoreCase("no")) {
-                break;
-            } else {
-                System.out.println("Enter the correct character");
-            }
-        }
-    }
+    static ArrayList<Auto> rentedAuto = new ArrayList<>();
+    private ArrayList<Auto> availableCars = allAuto;
+    private ManageAccounts manageAccounts = new ManageAccounts();
 
     public void rentACar() throws IOException {
-        if (loginOrRegister()){
+        if (manageAccounts.loginOrRegister()){
             boolean flag = true;
             while(flag) {
                 boolean flagCorrect = true;
@@ -100,7 +22,7 @@ public class ManageAuto extends CheckInput{
                         System.out.println(autoToRent);
                         rentedAuto.add(autoToRent);
                         availableCars.remove(autoToRent);
-
+                        Client.client.addCarToRentedCarsByClient(autoToRent);
                         System.out.println("You rented this car. ");
                         flagCorrect = false;
                     } else {
@@ -118,7 +40,7 @@ public class ManageAuto extends CheckInput{
         while(flag) {
             boolean flagCorrect = true;
             while (flagCorrect) {
-                System.out.print("\nWhich car you want to return? Enter the car ID number from below list: ");
+                System.out.println("\nWhich car you want to return? Enter the car ID number from below list: ");
                 showAllRentedCars();
                 int number = stringToInt();
                 if (number <= rentedAuto.size() && number > 0) {
