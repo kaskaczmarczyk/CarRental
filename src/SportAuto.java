@@ -1,4 +1,3 @@
-/*
 public class SportAuto extends Auto{
 
     private boolean szyberdach;
@@ -15,4 +14,3 @@ public class SportAuto extends Auto{
     }
 
 }
-*/

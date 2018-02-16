@@ -20,7 +20,11 @@ public class CarRental {
         ManageAuto.allAuto.add(auto3);
         ManageAuto.allAuto.add(auto4);
         ManageAuto.allAuto.add(auto5);
-        Client.rentedCarsByClient.add(auto1);
+        ManageAuto.availableCars.add(auto1);
+        ManageAuto.availableCars.add(auto2);
+        ManageAuto.availableCars.add(auto3);
+        ManageAuto.availableCars.add(auto4);
+        ManageAuto.availableCars.add(auto5);
 
 
         while (true) {
