@@ -1,32 +1,34 @@
-import java.util.ArrayList;
-
 public class Client extends Person{
 
-    public static ArrayList<Auto> rentedCarsByClient = new ArrayList<>();
-    public static ArrayList<Client> clients = new ArrayList<>();
-
-    Client(String name, String surname) {
-        super(name, surname);
-    }
-
+    private String login;
+    private String password;
     public static Client client;
 
-    public void addClient(Client client) {
-        clients.add(client);
-    }
+    public Client() {}
 
-    public void addCarToRentedCarsByClient(Auto auto) {
-        rentedCarsByClient.add(auto);
+    Client(String name, String surname, String login, String password) {
+        super(name, surname);
+        this.login = login;
+        this.password = password;
     }
 
     public Client getClient() {
         return this;
     }
 
-    public void showAllRentedCarsByClient() {
-        System.out.println("-----------------------------------------------------------LIST OF RENTED CARS BY CLIENT-----------------------------------------------------------");
-        for (Auto auto: rentedCarsByClient) {
-            System.out.println(auto);
-        }
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

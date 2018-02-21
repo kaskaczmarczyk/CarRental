@@ -8,24 +8,7 @@ public class CarRental {
 
     public static void main(String[] args) throws IOException {
         CarRental carRental = new CarRental();
-
         BufferedReader bufferedReader = carRental.bufferedReader;
-        Auto auto1 = new Auto("Peugeot", 1.4);
-        Auto auto2 = new Auto("Audi", 1.6);
-        Auto auto3 = new Auto("Honda", 2.0);
-        Auto auto4 = new Auto("Opel", 2.5);
-        Auto auto5 = new Auto("Subaru", 3.0);
-        ManageAuto.allAuto.add(auto1);
-        ManageAuto.allAuto.add(auto2);
-        ManageAuto.allAuto.add(auto3);
-        ManageAuto.allAuto.add(auto4);
-        ManageAuto.allAuto.add(auto5);
-        ManageAuto.availableCars.add(auto1);
-        ManageAuto.availableCars.add(auto2);
-        ManageAuto.availableCars.add(auto3);
-        ManageAuto.availableCars.add(auto4);
-        ManageAuto.availableCars.add(auto5);
-
 
         while (true) {
             System.out.println("\nWelcome in our car rental. Choose one of the following options: ");
@@ -40,28 +23,30 @@ public class CarRental {
 
             switch (chosenModule) {
                 case "1" :
-                    ManageAuto rentACar = new ManageAuto();
-                    rentACar.rentACar();
+                    ManageClient manageClientRent = new ManageClient();
+                    ManageAuto rentCar = new ManageAuto();
+                    rentCar.rentACar(manageClientRent.haveAccount());
                     break;
                 case "2":
+                    ManageClient manageClientReturn = new ManageClient();
                     ManageAuto returnCar = new ManageAuto();
-                    returnCar.returnCar(bufferedReader);
+                    returnCar.returnCar(manageClientReturn.loginClient());
                     break;
                 case "3":
-                    ManageAuto showAvailableCars = new ManageAuto();
-                    showAvailableCars.showAvailableCars();
+                    ShowCars showAvailableCars = new ShowCars();
+                    showAvailableCars.showAvailableCarsInRental();
                     break;
                 case "4":
-                    ManageAuto showAllCars = new ManageAuto();
-                    showAllCars.showAllCars();
+                    ShowCars showAllCars = new ShowCars();
+                    showAllCars.showAllCarsInRental();
                     break;
                 case "5":
-                    ManageAccounts manageLogin = new ManageAccounts();
-                    manageLogin.login();
+                    ManageClient loginClient = new ManageClient();
+                    loginClient.loginClient();
                     break;
                 case "6":
-                    ManageAccounts manageRegister = new ManageAccounts();
-                    manageRegister.register();
+                    ManageClient registerNewClient = new ManageClient();
+                    registerNewClient.createNewClient();
                     break;
                 default:
                     System.out.println("...");

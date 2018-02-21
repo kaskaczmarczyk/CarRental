@@ -1,3 +1,4 @@
+/*
 public class FamilyAuto extends Auto {
     private int fotelikDzieciecy;
 
@@ -12,3 +13,4 @@ public class FamilyAuto extends Auto {
         return (super.toString() + "\n\tfotelik dziecięcy: " + fotelikDzieciecy);
     }
 }
+*/
