@@ -156,7 +156,8 @@ public class ManageAuto extends CheckInput{
     private void closeRentail(int clientID, int autoID) {
         String sql = "UPDATE rentaldetails SET endTime = '"+endTime+"' WHERE idAuto = '"+autoID+"' AND " +
                 "idClient= '"+clientID+"'";
-        System.out.println("You rented this car for " + countDaysOfRental() + " days.");
+        int daysOfRental = countDaysOfRental(clientID, autoID);
+        System.out.println("You rented this car for " + daysOfRental + " days.");
         try {
             connection = DriverManager.getConnection(ConnectionDB.url, ConnectionDB.userID, ConnectionDB.password);
 
@@ -171,6 +172,31 @@ public class ManageAuto extends CheckInput{
             System.err.println("Error when closing rentals.");
             exc.printStackTrace();
         }
+        System.out.println("You have to pay " + countHowMuchPay(daysOfRental, getPricePerDay(autoID)) + " PLN.");
+    }
+
+    public double getPricePerDay(int autoId) {
+        double price = 0;
+        String sql = "SELECT pricePerDay FROM allAuto WHERE id = '"+autoId+"'";
+        try {
+            connection = DriverManager.getConnection(ConnectionDB.url, ConnectionDB.userID, ConnectionDB.password);
+
+        } catch (SQLException exc) {
+            System.err.println();
+            exc.printStackTrace();
+        }
+        try {
+            Statement stmPrice = connection.createStatement();
+            ResultSet resultSet = stmPrice.executeQuery(sql);
+            while (resultSet.next()) {
+                int result = resultSet.getInt(1);
+                price = result;
+            }
+        } catch (SQLException exc) {
+            System.err.println("Error when closing rentals.");
+            exc.printStackTrace();
+        }
+        return price;
     }
 
     public void returnCar(int id) throws IOException {
@@ -211,8 +237,9 @@ public class ManageAuto extends CheckInput{
         }
     }
 
-    public int countDaysOfRental() {
-        String sql = "SELECT DATEDIFF("+endTime+", "+startTime+")";
+    public int countDaysOfRental(int idClient, int idAuto) {
+        Date startTime = getTimeStart(getIdRentails(idClient, idAuto));
+        String sql = "SELECT DATEDIFF('"+endTime+"', '"+startTime+"')";
         int days = 0;
         try {
             connection = DriverManager.getConnection(ConnectionDB.url, ConnectionDB.userID, ConnectionDB.password);
@@ -232,5 +259,55 @@ public class ManageAuto extends CheckInput{
             exc.printStackTrace();
         }
         return days;
+    }
+
+    public double countHowMuchPay(int days, double pricePerDay) {
+        return  pricePerDay * days;
+    }
+
+    public int getIdRentails(int idClient, int idAuto) {
+        int idRentails = 0;
+        String sql = "SELECT id FROM rentaldetails WHERE idClient = '"+idClient+"' AND idAuto = '"+idAuto+"' AND endTime = 0000-00-00";
+        try {
+            connection = DriverManager.getConnection(ConnectionDB.url, ConnectionDB.userID, ConnectionDB.password);
+        } catch (SQLException exc) {
+            System.err.println();
+            exc.printStackTrace();
+        }
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                idRentails = resultSet.getInt(1);
+            }
+            connection.close();
+        } catch (SQLException exc) {
+            System.err.println("Error when reading the auto data.");
+            exc.printStackTrace();
+        }
+        return idRentails;
+    }
+
+    public Date getTimeStart(int idRentails) {
+        Date start = new Date(date.getTime());
+        String sql = "SELECT startTime FROM rentaldetails WHERE id = '"+idRentails+"'";
+        try {
+            connection = DriverManager.getConnection(ConnectionDB.url, ConnectionDB.userID, ConnectionDB.password);
+        } catch (SQLException exc) {
+            System.err.println();
+            exc.printStackTrace();
+        }
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                start = resultSet.getDate(1);
+            }
+            connection.close();
+        } catch (SQLException exc) {
+            System.err.println("Error when reading the auto data.");
+            exc.printStackTrace();
+        }
+        return start;
     }
 }
