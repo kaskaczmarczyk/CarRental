@@ -10,8 +10,6 @@ public class Auto {
     private double pricePerDay;
     private boolean isAvailable;
 
-    Auto() {}
-
     public Auto(String brand, String model, double engineCapacity, String fuel, int km, int numberOfSeats,
                 double pricePerDay, boolean airConditioning, boolean isAvailable) {
         this.brand = brand;
@@ -21,6 +19,7 @@ public class Auto {
         this.km = km;
         this.numberOfSeats = numberOfSeats;
         this.pricePerDay = pricePerDay;
+
         this.airConditioning = airConditioning;
         this.isAvailable = isAvailable;
     }
