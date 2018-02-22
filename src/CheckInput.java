@@ -23,25 +23,6 @@ public class CheckInput {
         return myInt;
     }
 
-    public double stringToDouble() throws IOException {
-        double myInt;
-        while (true) {
-            String myString = bufferedReader.readLine();
-            if (myString.matches("^[0-9].+[0-9]+$") || myString.matches("^[0-9]+$")) {
-                try {
-                    myInt = Double.parseDouble(myString);
-                    break;
-                } catch (NumberFormatException exc) {
-                    System.out.print("Enter number: ");
-                }
-            } else {
-                System.out.print("Enter number: ");
-            }
-        }
-        return myInt;
-    }
-
-
     public String notTakeEmptyString() throws IOException {
         String myString;
         while (true) {

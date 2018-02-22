@@ -4,12 +4,14 @@ import java.io.InputStreamReader;
 import java.sql.*;
 
 public class ManageClient {
-    private Connection connection = null;
+    private ConnectionDB connectionDB = new ConnectionDB();
     private CheckInput checkInput = new CheckInput();
     private BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    private ShowCars showCars = new ShowCars();
 
-    public int haveAccount() throws IOException {
-        int idClient = 0;
+
+    public int haveAccount() throws IOException, SQLException {
+        int idClient;
         while (true) {
             System.out.print("Do you have a rental account? Y/N ");
             String answer = bufferedReader.readLine();
@@ -26,82 +28,58 @@ public class ManageClient {
         return idClient;
     }
 
-    public int createNewClient() throws IOException {
-        System.out.print("Enter your name: ");
-        String name = checkInput.notTakeEmptyString();
-        System.out.print("Enter your surname: ");
-        String surname = checkInput.notTakeEmptyString();
-        System.out.print("Enter your login: ");
-        String login = checkInput.notTakeEmptyString();
-        System.out.print("Enter your password: ");
-        String password = checkInput.notTakeEmptyString();
-        String sgl = "INSERT INTO client (name, surname, login, password) SELECT '"+name+"', '"+surname+"', " +
-                "'"+login+"', '"+password+"' FROM dual WHERE NOT EXISTS (SELECT * FROM client WHERE login='"+login+"' " +
-                "AND password = '"+password+"')";
-        try {
-            connection = DriverManager.getConnection(ConnectionDB.url, ConnectionDB.userID, ConnectionDB.password);
-        } catch (SQLException exc) {
-            System.err.println();
-            exc.printStackTrace();
+
+
+    public int createNewClient() throws IOException, SQLException {
+        String name = returnAnswer("name");
+        String surname = returnAnswer("surname");
+        String login = returnAnswer("login");
+        String password = returnAnswer("password");
+        if (!checkIfClientAccountExist(login, password)) {
+            String sql = "INSERT INTO client (name, surname, login, password) SELECT '"+name+"', '"+surname+"', " +
+                    "'"+login+"', '"+password+"' FROM dual WHERE NOT EXISTS (SELECT * FROM client WHERE login='"+login+"' " +
+                    "AND password = '"+password+"')";
+            connectionDB.createPreparedStatement(sql);
+            String sqlId = "SELECT id FROM client WHERE `login` ='"+login+"' AND password='"+password+"' LIMIT 1";
+            int idClient = connectionDB.createStatementWithResult(sqlId).getInt(1);
+            showCars.showCarsRentedByClient(idClient);
+            return idClient;
+        } else {
+            System.out.println("Such an account already exists!");
+            return 0;
         }
-        try {
-            PreparedStatement prepstm = connection.prepareStatement(sgl);
-            prepstm.execute();
-        } catch (SQLException exc) {
-            System.err.println("Error when reading the client data.");
-            exc.printStackTrace();
-        }
-        String sqlId = "SELECT id FROM client WHERE `login` ='"+login+"' AND password='"+password+"' LIMIT 1";
-        int id = 0;
-        try {
-            Statement stmId = connection.createStatement();
-            ResultSet resultSet = stmId.executeQuery(sqlId);
-            while (resultSet.next()) {
-                id = resultSet.getInt(1);
-            }
-            connection.close();
-        } catch (SQLException exc) {
-            System.err.println("Error when reading the client ID number.");
-            exc.printStackTrace();
-        }
-        ShowCars showCars = new ShowCars();
-        showCars.showCarsRentedByClient(id);
-        return id;
     }
 
-    public int loginClient() throws IOException {
-        System.out.print("Enter your login: ");
-        String login = checkInput.notTakeEmptyString();
-        System.out.print("Enter your password: ");
-        String password = checkInput.notTakeEmptyString();
-        String sql = "SELECT * FROM client WHERE login ='"+login+"' AND password='"+password+"'";
-        try {
-            connection = DriverManager.getConnection(ConnectionDB.url, ConnectionDB.userID, ConnectionDB.password);
-        } catch (SQLException exc) {
-            System.err.println();
-            exc.printStackTrace();
+    public int loginClient() throws IOException, SQLException {
+        String login = returnAnswer("login");
+        String password = returnAnswer("password");
+        if (checkIfClientAccountExist(login, password)) {
+            String sql = "SELECT * FROM client WHERE login ='"+login+"' AND password='"+password+"'";
+            connectionDB.createPreparedStatement(sql);
+            String sqlId = "SELECT id FROM client WHERE login ='"+login+"' AND password='"+password+"' LIMIT 1";
+            int idClient = connectionDB.createStatementWithResult(sqlId).getInt(1);
+            return idClient;
+        } else {
+            System.out.println("Such an account doesn' t exist!");
+            return 0;
         }
-        try {
-            PreparedStatement prepstm = connection.prepareStatement(sql);
-            prepstm.execute();
-            System.out.println("You login to your account.");
-        } catch (SQLException exc) {
-            System.err.println("Error when reading the client data.");
-            exc.printStackTrace();
+    }
+
+    private boolean checkIfClientAccountExist(String login, String password) throws SQLException {
+        String sql = "SELECT COUNT(*)FROM client WHERE login = '"+login+"' AND password = '"+password+"'";
+        int result = connectionDB.createStatementWithResult(sql).getInt(1);
+        boolean ifAccountExist = false;
+        if (result == 1) {
+            ifAccountExist = true;
+        } else if (result == 0){
+            ifAccountExist = false;
         }
-        String sqlId = "SELECT id FROM client WHERE login ='"+login+"' AND password='"+password+"' LIMIT 1";
-        int id = 0;
-        try {
-            Statement stmId = connection.createStatement();
-            ResultSet resultSet = stmId.executeQuery(sqlId);
-            while (resultSet.next()) {
-                id = resultSet.getInt(1);
-            }
-            connection.close();
-        } catch (SQLException exc) {
-            System.err.println("Error when reading the client ID number.");
-            exc.printStackTrace();
-        }
-        return id;
+        return ifAccountExist;
+    }
+
+    public String returnAnswer(String stringToInput) throws IOException {
+        System.out.print("Enter your " + stringToInput + ": ");
+        String string = checkInput.notTakeEmptyString();
+        return string;
     }
 }

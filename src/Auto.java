@@ -1,27 +1,19 @@
 public class Auto {
 
     private String brand;
-    private String model;
     private double engineCapacity;
     private String fuel;
     private int km;
     private int numberOfSeats;
     private boolean airConditioning;
-    private double pricePerDay;
-    private boolean isAvailable;
 
-    public Auto(String brand, String model, double engineCapacity, String fuel, int km, int numberOfSeats,
-                double pricePerDay, boolean airConditioning, boolean isAvailable) {
+    public Auto(String brand, double engineCapacity, String fuel, int km, int numberOfSeats, boolean airConditioning) {
         this.brand = brand;
-        this.model = model;
         this.engineCapacity = engineCapacity;
         this.fuel = fuel;
         this.km = km;
         this.numberOfSeats = numberOfSeats;
-        this.pricePerDay = pricePerDay;
-
         this.airConditioning = airConditioning;
-        this.isAvailable = isAvailable;
     }
 
     public String toString(){

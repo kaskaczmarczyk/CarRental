@@ -1,12 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 
 public class CarRental {
 
     private BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
         CarRental carRental = new CarRental();
         BufferedReader bufferedReader = carRental.bufferedReader;
 
@@ -24,12 +25,12 @@ public class CarRental {
             switch (chosenModule) {
                 case "1" :
                     ManageClient manageClientRent = new ManageClient();
-                    ManageAuto rentCar = new ManageAuto();
+                    ManageRental rentCar = new ManageRental();
                     rentCar.rentACar(manageClientRent.haveAccount());
                     break;
                 case "2":
                     ManageClient manageClientReturn = new ManageClient();
-                    ManageAuto returnCar = new ManageAuto();
+                    ManageRental returnCar = new ManageRental();
                     returnCar.returnCar(manageClientReturn.loginClient());
                     break;
                 case "3":

@@ -6,12 +6,6 @@ public class Client extends Person{
 
     public Client() {}
 
-    Client(String name, String surname, String login, String password) {
-        super(name, surname);
-        this.login = login;
-        this.password = password;
-    }
-
     public Client getClient() {
         return this;
     }
